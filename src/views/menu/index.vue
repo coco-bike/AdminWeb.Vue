@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { getPageList } from '@/api/menu'
+import { getList } from '@/api/menu'
 
 export default {
   filters: {
@@ -68,7 +68,7 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getPageList(1,10,'v').then(response => {
+      getList('').then(response => {
         this.list = response.data.items
         this.listLoading = false
       })

@@ -1,13 +1,13 @@
-import Vue from "vue";
-import Router from "vue-router";
+import Vue from 'vue'
+import Router from 'vue-router'
 
 // in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
 
-Vue.use(Router);
+Vue.use(Router)
 
 /* Layout */
-import Layout from "../views/layout/Layout";
+import Layout from '../views/layout/Layout'
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -24,147 +24,160 @@ import Layout from "../views/layout/Layout";
 **/
 export const constantRouterMap = [
   {
-    path: "/login",
-    component: () => import("@/views/login/index"),
+    path: '/login',
+    component: () => import('@/views/login/index'),
     hidden: true
   },
-  { path: "/404", component: () => import("@/views/404"), hidden: true },
+  { path: '/404', component: () => import('@/views/404'), hidden: true },
 
   {
-    path: "/",
+    path: '/',
     component: Layout,
-    redirect: "/dashboard",
+    redirect: '/dashboard',
     hidden: true,
     children: [
       {
-        path: "dashboard",
-        component: () => import("@/views/dashboard/index")
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index')
       }
     ]
   },
 
   {
-    path: "/example",
+    path: '/example',
     component: Layout,
-    redirect: "/example/table",
-    name: "Example",
-    meta: { title: "例子", icon: "example" },
+    redirect: '/example/table',
+    name: 'Example',
+    meta: { title: '例子', icon: 'example' },
     children: [
       {
-        path: "table",
-        name: "Table",
-        component: () => import("@/views/table/index"),
-        meta: { title: "表格", icon: "table" }
+        path: 'table',
+        name: 'Table',
+        component: () => import('@/views/table/index'),
+        meta: { title: '表格', icon: 'table' }
       },
       {
-        path: "tree",
-        name: "Tree",
-        component: () => import("@/views/tree/index"),
-        meta: { title: "树", icon: "tree" }
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '树', icon: 'tree' }
       }
     ]
   },
 
   {
-    path: "/form",
+    path: '/form',
     component: Layout,
     children: [
       {
-        path: "index",
-        name: "Form",
-        component: () => import("@/views/form/index"),
-        meta: { title: "表单", icon: "form" }
+        path: 'index',
+        name: 'Form',
+        component: () => import('@/views/form/index'),
+        meta: { title: '表单', icon: 'form' }
       }
     ]
   },
 
   {
-    path: "/nested",
+    path: '/nested',
     component: Layout,
-    redirect: "/nested/menu1",
-    name: "Nested",
+    redirect: '/nested/menu1',
+    name: 'Nested',
     meta: {
-      title: "嵌套路由",
-      icon: "nested"
+      title: '嵌套路由',
+      icon: 'nested'
     },
     children: [
       {
-        path: "menu1",
-        component: () => import("@/views/nested/menu1/index"), // Parent router-view
-        name: "Menu1",
-        meta: { title: "Menu1" },
+        path: 'menu1',
+        component: () => import('@/views/nested/menu1/index'), // Parent router-view
+        name: 'Menu1',
+        meta: { title: 'Menu1' },
         children: [
           {
-            path: "menu1-1",
-            component: () => import("@/views/nested/menu1/menu1-1"),
-            name: "Menu1-1",
-            meta: { title: "Menu1-1" }
+            path: 'menu1-1',
+            component: () => import('@/views/nested/menu1/menu1-1'),
+            name: 'Menu1-1',
+            meta: { title: 'Menu1-1' }
           },
           {
-            path: "menu1-2",
-            component: () => import("@/views/nested/menu1/menu1-2"),
-            name: "Menu1-2",
-            meta: { title: "Menu1-2" },
+            path: 'menu1-2',
+            component: () => import('@/views/nested/menu1/menu1-2'),
+            name: 'Menu1-2',
+            meta: { title: 'Menu1-2' },
             children: [
               {
-                path: "menu1-2-1",
+                path: 'menu1-2-1',
                 component: () =>
-                  import("@/views/nested/menu1/menu1-2/menu1-2-1"),
-                name: "Menu1-2-1",
-                meta: { title: "Menu1-2-1" }
+                  import('@/views/nested/menu1/menu1-2/menu1-2-1'),
+                name: 'Menu1-2-1',
+                meta: { title: 'Menu1-2-1' }
               },
               {
-                path: "menu1-2-2",
+                path: 'menu1-2-2',
                 component: () =>
-                  import("@/views/nested/menu1/menu1-2/menu1-2-2"),
-                name: "Menu1-2-2",
-                meta: { title: "Menu1-2-2" }
+                  import('@/views/nested/menu1/menu1-2/menu1-2-2'),
+                name: 'Menu1-2-2',
+                meta: { title: 'Menu1-2-2' }
               }
             ]
           },
           {
-            path: "menu1-3",
-            component: () => import("@/views/nested/menu1/menu1-3"),
-            name: "Menu1-3",
-            meta: { title: "Menu1-3" }
+            path: 'menu1-3',
+            component: () => import('@/views/nested/menu1/menu1-3'),
+            name: 'Menu1-3',
+            meta: { title: 'Menu1-3' }
           }
         ]
       },
       {
-        path: "menu2",
-        component: () => import("@/views/nested/menu2/index"),
-        meta: { title: "menu2" }
+        path: 'menu2',
+        component: () => import('@/views/nested/menu2/index'),
+        meta: { title: 'menu2' }
       }
     ]
   },
   {
-    path: "/tinymce",
+    path: '/tinymce',
     component: Layout,
-    redirect: "noredirect",
-    name: "TinymceDemo",
+    redirect: 'noredirect',
+    name: 'TinymceDemo',
     children: [
       {
-        path: "tinymce",
-        component: () => import("@/views/components-demo/tinymce"),
-        meta: { title: "tinymce", icon: "eye" }
+        path: 'tinymce',
+        component: () => import('@/views/components-demo/tinymce'),
+        meta: { title: 'tinymce', icon: 'eye' }
       }
     ]
   },
   {
-    path: "external-link",
+    path: '/menu',
     component: Layout,
+    redirect: 'noredirect',
+    name: 'index',
     children: [
       {
-        path: "https://panjiachen.github.io/vue-element-admin-site/#/",
-        meta: { title: "链接", icon: "link" }
+        path: 'index',
+        component: () => import('@/views/menu/index'),
+        meta: { title: '菜单管理', icon: 'menuadmin' }
       }
     ]
   },
-  { path: "*", redirect: "/404", hidden: true }
-];
+  {
+    path: 'external-link',
+    component: Layout,
+    children: [
+      {
+        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+        meta: { title: '链接', icon: 'link' }
+      }
+    ]
+  },
+  { path: '*', redirect: '/404', hidden: true }
+]
 
 export default new Router({
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
-});
+})
