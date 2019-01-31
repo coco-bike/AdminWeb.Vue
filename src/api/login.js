@@ -1,21 +1,22 @@
 import request from '@/utils/request'
 
 export function login(username, password) {
+  debugger
   return request({
-    url: '/user/login',
+    url: '/login/GetJWTToken3',
     method: 'post',
     data: {
-      username,
-      password
+      name: username,
+      pass: password
     }
   })
 }
 
 export function getInfo(token) {
   return request({
-    url: '/user/info',
+    url: '/userrole/GetRoles',
     method: 'get',
-    params: { token }
+    params: { token:token }
   })
 }
 
