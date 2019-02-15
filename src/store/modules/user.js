@@ -1,6 +1,6 @@
 import { login, logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-
+let uid=0;
 const user = {
   state: {
     token: getToken(),
@@ -30,11 +30,16 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
-          const data = response;
-          console.log(data);
-          setToken(data.token_type+" "+data.token)
-          commit('SET_TOKEN', data.token_type+" "+data.token)
-          resolve()
+          if(response.status){
+            const data = response.data;
+            uid = response.uid;
+            setToken(data.token_type+" "+data.token)
+            commit('SET_TOKEN', data.token_type+" "+data.token)
+            resolve()
+          }
+          else{
+            FedLogOut();
+          }
         }).catch(error => {
           reject(error)
         })
@@ -44,11 +49,10 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(state.token).then(response => {
+        getInfo(uid).then(response => {
           const data = response;
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', data.roles);
-            console.log(data.token);
           } else {
             reject('getInfo: roles must be a non-null array !')
           }
@@ -64,7 +68,7 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        logout(uid).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           removeToken()

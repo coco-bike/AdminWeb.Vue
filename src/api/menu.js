@@ -1,13 +1,12 @@
 import request from '@/utils/request'
 
-export function getPageList(pageIndex, pageSize, name) {
+export function getPageList(pageIndex, pageSize) {
   return request({
     url: '/Module/ListPage',
-    method: 'get',
+    method: 'post',
     data: {
       'pageIndex': pageIndex,
-      'pageSize': pageSize,
-      'name': name
+      'pageSize': pageSize
     }
   })
 }
@@ -17,5 +16,23 @@ export function getList(params) {
     url: '/table/list',
     method: 'get',
     params
+  })
+}
+
+export function getMenuByID(id) {
+  return request({
+    url: '/Module/GetModule',
+    method: 'get',
+    params: {
+      Id: id
+    }
+  })
+}
+
+export function saveMenuData(moduleViewModels) {
+  return request({
+    url: '/Module/UpdateModule',
+    method: 'post',
+    data: moduleViewModels
   })
 }

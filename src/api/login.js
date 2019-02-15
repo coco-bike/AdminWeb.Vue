@@ -1,7 +1,6 @@
 import request from '@/utils/request'
 
 export function login(username, password) {
-  debugger
   return request({
     url: '/login/GetJWTToken3',
     method: 'post',
@@ -12,17 +11,18 @@ export function login(username, password) {
   })
 }
 
-export function getInfo(token) {
+export function getInfo(uid) {
   return request({
     url: '/userrole/GetRoles',
     method: 'get',
-    params: { token:token }
+    params: { uid:uid }
   })
 }
 
-export function logout() {
+export function logout(uid) {
   return request({
-    url: '/user/logout',
-    method: 'post'
+    url: '/login/LoginOut',
+    method: 'post',
+    params: { uid:uid }
   })
 }
