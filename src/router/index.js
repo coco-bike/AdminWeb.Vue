@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import {getAsyncRouterMap} from '@/api/router'
 
 // in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
@@ -8,7 +9,6 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
-
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
 * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -22,45 +22,63 @@ import Layout from '../views/layout/Layout'
     breadcrumb: false            if false, the item will hidden in breadcrumb(default is true)
   }
 **/
-export const constantRouterMap = [
-  {
+export const constantRouterMap = [{
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
   },
-  { path: '/404', component: () => import('@/views/404'), hidden: true },
-
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    hidden: true,
-    children: [
-      {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index')
+    hidden: false,
+    children: [{
+      path: 'dashboard',
+      component: () => import('@/views/dashboard/index'),
+      meta: {
+        title: "首页",
+        icon: 'index'
       }
-    ]
-  },
+    }]
+  }
+]
 
-  {
+
+
+// export const asyncRouterMap= getAsyncRouterMap().then(r=>{
+//   if (r.Success) {
+//     console.log('路由已经获取');
+
+//   }
+// });
+
+export const asyncRouterMap = [{
     path: '/example',
+    hidden: true,
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
-    meta: { title: '例子', icon: 'example' },
-    children: [
-      {
+    meta: {
+      title: '例子',
+      icon: 'example'
+    },
+    children: [{
         path: 'table',
         name: 'Table',
         component: () => import('@/views/table/index'),
-        meta: { title: '表格', icon: 'table' }
+        meta: {
+          title: '表格',
+          icon: 'table',
+          role: ['Admin','super_editor'] 
+        }
       },
       {
         path: 'tree',
         name: 'Tree',
         component: () => import('@/views/tree/index'),
-        meta: { title: '树', icon: 'tree' }
+        meta: {
+          title: '树',
+          icon: 'tree'
+        }
       }
     ]
   },
@@ -68,14 +86,16 @@ export const constantRouterMap = [
   {
     path: '/form',
     component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: '表单', icon: 'form' }
+    children: [{
+      path: 'index',
+      name: 'Form',
+      component: () => import('@/views/form/index'),
+      meta: {
+        title: '表单',
+        icon: 'form',
+        role: ['Admin','super_editor'] 
       }
-    ]
+    }]
   },
 
   {
@@ -85,40 +105,48 @@ export const constantRouterMap = [
     name: 'Nested',
     meta: {
       title: '嵌套路由',
-      icon: 'nested'
+      icon: 'nested',
+      role: ['Admin','super_editor'] 
     },
-    children: [
-      {
+    children: [{
         path: 'menu1',
         component: () => import('@/views/nested/menu1/index'), // Parent router-view
         name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
+        meta: {
+          title: 'Menu1'
+        },
+        children: [{
             path: 'menu1-1',
             component: () => import('@/views/nested/menu1/menu1-1'),
             name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
+            meta: {
+              title: 'Menu1-1'
+            }
           },
           {
             path: 'menu1-2',
             component: () => import('@/views/nested/menu1/menu1-2'),
             name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
+            meta: {
+              title: 'Menu1-2'
+            },
+            children: [{
                 path: 'menu1-2-1',
                 component: () =>
                   import('@/views/nested/menu1/menu1-2/menu1-2-1'),
                 name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
+                meta: {
+                  title: 'Menu1-2-1'
+                }
               },
               {
                 path: 'menu1-2-2',
                 component: () =>
                   import('@/views/nested/menu1/menu1-2/menu1-2-2'),
                 name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
+                meta: {
+                  title: 'Menu1-2-2'
+                }
               }
             ]
           },
@@ -126,58 +154,72 @@ export const constantRouterMap = [
             path: 'menu1-3',
             component: () => import('@/views/nested/menu1/menu1-3'),
             name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
+            meta: {
+              title: 'Menu1-3'
+            }
           }
         ]
       },
       {
         path: 'menu2',
         component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
+        meta: {
+          title: 'menu2'
+        }
       }
     ]
   },
   {
     path: '/tinymce',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'TinymceDemo',
-    children: [
-      {
-        path: 'tinymce',
-        component: () => import('@/views/components-demo/tinymce'),
-        meta: { title: 'tinymce', icon: 'eye' }
+    component: () => import('../views/layout/Layout'),
+    children: [{
+      path: 'tinymce',
+      name: 'TinymceDemo',
+      component: () => import('@/views/components-demo/tinymce'),
+      meta: {
+        title: 'tinymce',
+        icon: 'eye',
+        role: ['Admin','super_editor'] 
       }
-    ]
+    }]
   },
   {
     path: '/menu',
     component: Layout,
-    redirect: 'noredirect',
-    name: 'index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/menu/index'),
-        meta: { title: '菜单管理', icon: 'menuadmin' }
+    children: [{
+      path: 'index',
+      name: 'Menu',
+      component: () => import('@/views/menu/index'),
+      meta: {
+        title: '菜单管理',
+        icon: 'menuadmin',
+        role: ['Admin','super_editor'] 
       }
-    ]
+    }]
   },
   {
     path: 'external-link',
     component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: '链接', icon: 'link' }
+    children: [{
+      path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+      meta: {
+        title: '链接',
+        icon: 'link',
+        role: ['Admin','super_editor'] 
       }
-    ]
+    }]
   },
-  { path: '*', redirect: '/404', hidden: true }
+  {
+    path: '*',
+    redirect: '/404',
+    hidden: true
+  }
 ]
 
 export default new Router({
   // mode: 'history', //后端支持可开
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({
+    y: 0
+  }),
   routes: constantRouterMap
 })

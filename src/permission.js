@@ -21,7 +21,20 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
-          next()
+          const roles = res.roles;
+          store.dispatch('GenerateRoutes', {
+            roles
+          }).then(() => { // 生成可访问的路由表
+            router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
+            next({
+              ...to,
+              replace: true
+            })
+            //将获取的路由载入
+            router.options.routes=store.getters.routers;
+            console.log(store.getters.routers);
+            //Cookies.set('sidebarStatus', 1)
+          })
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {
             Message.error(err || 'Verification failed, please login again')

@@ -36,3 +36,21 @@ export function saveMenuData(moduleViewModels) {
     data: moduleViewModels
   })
 }
+
+export function addMenuData(moduleViewModels){
+  return request({
+    url: '/Module/AddModule',
+    method: 'post',
+    data: moduleViewModels
+  })
+}
+
+export function deleteMenuData(id){
+  return request({
+    url: '/Module/DeleteModule',
+    method: 'get',
+    params: {
+      Id: id
+    }
+  })
+}

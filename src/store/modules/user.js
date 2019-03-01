@@ -1,6 +1,6 @@
 import { login, logout, getInfo } from '@/api/login'
-import { getToken, setToken, removeToken } from '@/utils/auth'
-let uid=0;
+import { getToken, setToken, removeToken,setUid,getUid,removeUid } from '@/utils/auth'
+
 const user = {
   state: {
     token: getToken(),
@@ -32,10 +32,10 @@ const user = {
         login(username, userInfo.password).then(response => {
           if(response.status){
             const data = response.data;
-            uid = response.uid;
+            setUid(response.uid);
             setToken(data.token_type+" "+data.token)
             commit('SET_TOKEN', data.token_type+" "+data.token)
-            resolve()
+            resolve();
           }
           else{
             FedLogOut();
@@ -49,7 +49,7 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(uid).then(response => {
+        getInfo(getUid()).then(response => {
           const data = response;
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', data.roles);
@@ -68,10 +68,11 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(uid).then(() => {
+        logout(getUid()).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           removeToken()
+          removeUid()
           resolve()
         }).catch(error => {
           reject(error)
