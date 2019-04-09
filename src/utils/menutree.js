@@ -1,9 +1,7 @@
 /* 字段名以字符串的形式传入 */
 //获取菜单树
 export function setTreeData(source) {
-  console.log(source);
-  let cloneData = JSON.parse(JSON.stringify(source))
-  console.log(cloneData);
+  let cloneData = source
   let tree = cloneData.filter(father => {
     let branchArr = cloneData.filter(child => {
       return father.id == child.parentId
@@ -13,7 +11,6 @@ export function setTreeData(source) {
     }
     return father.parentId == 0 //如果第一层不是parentId=0，请自行修改
   })
-  console.log(tree);
   return tree
 }
 

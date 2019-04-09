@@ -14,6 +14,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
+
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
 * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -91,7 +92,9 @@ export const asyncRouterMap= getAsyncClientRouterMap().then(r => {
     });
     console.log(maps);
     console.log(setTreeData(maps));
-    return setTreeData(maps);
+    return   new Promise((resolve)=>{
+      resolve(setTreeData(maps));
+    });
   }
 });
 

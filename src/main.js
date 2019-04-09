@@ -19,7 +19,7 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
-new Vue({
+let appVue= new Vue({
   el: '#app',
   router,
   store,
