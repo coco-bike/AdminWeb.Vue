@@ -32,8 +32,6 @@ router.beforeEach((to, from, next) => {
             })
             //将获取的路由载入
             router.options.routes=store.getters.routers;
-            console.log(store.getters.routers);
-            //Cookies.set('sidebarStatus', 1)
           })
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {

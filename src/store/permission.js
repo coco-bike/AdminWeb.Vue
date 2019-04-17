@@ -1,5 +1,7 @@
 // store/permission.js
-import { asyncRouterMap, constantRouterMap } from '@/router/index';
+import {
+  constantRouterMap,getasyncRouterMap,asyncRouterMap
+} from '@/router/index';
 
 function hasPermission(roles, route) {
   if (route.meta && route.meta.role) {
@@ -21,34 +23,39 @@ const permission = {
     }
   },
   actions: {
-    GenerateRoutes({ commit }, data) {
+    GenerateRoutes({
+      commit
+    }, data) {
       return new Promise(resolve => {
-        const { roles } = data;
-        console.log(asyncRouterMap);
-        const accessedRouters = asyncRouterMap.then(data => {
-          return data.filter(v => {
-            //if (roles.indexOf('admin') >= 0) return true;
-            if (hasPermission(roles, v)) {
-              if (v.children && v.children.length > 0) {
-                v.children = v.children.filter(child => {
-                  if (hasPermission(roles, child)) {
-                    return child
-                  }
-                  return false;
-                });
-                return v
-              } else {
-                return v
+        // commit('SET_ROUTERS', asyncRouterMap);
+        // resolve();
+        getasyncRouterMap().then(r => {
+            ///整理菜单层级关系
+            let accessedRouters =r.filter(v => {
+              const {
+                roles
+              } = data;
+              //if (roles.indexOf('admin') >= 0) return true;
+              if (hasPermission(roles, v)) {
+                if (v.children && v.children.length > 0) {
+                  v.children = v.children.filter(child => {
+                    if (hasPermission(roles, child)) {
+                      return child
+                    }
+                    return false;
+                  });
+                  return v
+                } else {
+                  return v
+                }
               }
-            }
-            return false;
-          });
+              return false;
+            });
+            commit('SET_ROUTERS', accessedRouters);
+            console.log(accessedRouters);
+            resolve();
         });
-        accessedRouters.then(res=>{
-          commit('SET_ROUTERS', res);
-        })
-        resolve();
-      })
+      });
     }
   }
 };
