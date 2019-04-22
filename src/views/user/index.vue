@@ -1,8 +1,9 @@
-<template>
+
+   <template>
   <div class="app-container">
     <div class="search-value">
       <span>
-        菜单名称：
+        真实名称：
       </span>
       <el-input
         placeholder="请输入内容"
@@ -29,6 +30,8 @@
       :data="list"
       element-loading-text="Loading"
       border
+      height="750"
+      style="width: 100%"
       fit
       highlight-current-row
     >
@@ -47,54 +50,67 @@
         width="95"
       >
         <template slot-scope="scope">
-          {{ scope.row.Id }}
+          {{ scope.row.uID }}
         </template>
       </el-table-column>
       <el-table-column
         align="center"
-        label="菜单级别"
-        width="95"
+        prop="uLoginName"
+        label="登录账号"
+        width="80"
       >
-        <template slot-scope="scope">
-          {{ scope.row.ParentId==0?"顶级菜单": scope.row.ParentId}}
-        </template>
       </el-table-column>
       <el-table-column
-        prop="Title"
-        label="菜单标题"
-      ></el-table-column>
-      <el-table-column
-        prop="Name"
-        label="菜单名称"
-        width="120"
-      ></el-table-column>
-      <el-table-column
-        prop="Path"
-        label="菜单地址"
+        prop="uRealName"
+        label="真实姓名"
         width="80"
       ></el-table-column>
       <el-table-column
-        prop="Component"
-        label="当前组件"
+        prop="uHeaderImgUrl"
+        label="头像地址"
+        width="250"
       ></el-table-column>
       <el-table-column
-        prop="Redirect"
-        label="重定向"
-      ></el-table-column>
+        width="200"
+        label="创建时间"
+      >
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span style="margin-left: 10px">{{ scope.row.uCreateTime }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
-        prop="Icon"
-        label="图标地址"
+        label="更新时间"
+        width="200"
+      >
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span style="margin-left: 10px">{{ scope.row.uUpdateTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="最后登录"
+        width="200"
+      >
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span style="margin-left: 10px">{{ scope.row.uLastErrTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="uErrorCount"
+        label="错误次数"
       ></el-table-column>
-      <el-table-column label="隐藏">
+      <el-table-column label="状态">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.Hidden | statusFilter">{{ scope.row.Hidden?'是':'否' }}</el-tag>
+          <el-tag :type="scope.row.uStatus | statusFilter">{{ scope.row.uStatus==1?'启用':'禁用' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="禁用">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.IsDeleted | statusFilter">{{ scope.row.IsDeleted?'是':'否' }}</el-tag>
-        </template>
-      </el-table-column>
+      <el-table-column
+        prop="uRemark"
+        label="备注"
+        width="120"
+      ></el-table-column>
       <el-table-column
         label="操作"
         fixed="right"
@@ -137,75 +153,58 @@
       >
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="菜单标题">
-              <el-input v-model="form.Title"></el-input>
+            <el-form-item label="登录账号">
+              <el-input v-model="form.uLoginName"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="菜单链接地址">
-              <el-input v-model="form.Path"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="当前组件">
-              <el-input v-model="form.Component"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="重定向">
-              <el-input v-model="form.Redirect"></el-input>
+            <el-form-item label="登录密码">
+              <el-input v-model="form.uLoginPWD"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="菜单图标">
-              <el-input v-model="form.Icon"></el-input>
+            <el-form-item label="真实姓名">
+              <el-input v-model="form.uRealName"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="菜单名称">
-              <el-input v-model="form.Name"></el-input>
+            <el-form-item label="账号状态">
+              <el-switch v-model="form.uStatus"></el-switch>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="菜单描述">
-              <el-input v-model="form.Description"></el-input>
+          <el-col :span="20">
+            <el-form-item label="备注">
+              <el-input
+                type="textarea"
+                v-model="form.uRemark"
+              ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="选择父级菜单">
-              <el-select
-                v-model="form.ParentId"
-                filterable
-                placeholder="请选择"
-                class="menu-width"
-                @visible-change="selectClick"
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="20">
+            <el-form-item label="头像">
+              <el-upload
+                class="avatar-uploader"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
               >
-                <el-option
-                  v-for="item in selectList"
-                  :key="item.Id"
-                  :label="item.Title"
-                  :value="item.Id"
+                <img
+                  v-if="imageUrl"
+                  :src="imageUrl"
+                  class="avatar"
                 >
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="是否隐藏">
-              <el-switch v-model="form.Hidden"></el-switch>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="是否禁用">
-              <el-switch v-model="form.IsDeleted"></el-switch>
+                <i
+                  v-else
+                  class="el-icon-plus avatar-uploader-icon"
+                ></i>
+              </el-upload>
             </el-form-item>
           </el-col>
         </el-row>
@@ -217,7 +216,7 @@
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="savemenu"
+          @click="save"
         >确 定</el-button>
       </span>
     </el-dialog>
@@ -228,18 +227,18 @@
 <script>
 import {
   getPageList,
-  getMenuByID,
-  saveMenuData,
-  addMenuData,
-  deleteMenuData
-} from "@/api/menu";
+  getInfoByID,
+  saveInfoData,
+  addInfoData,
+  deleteInfoData
+} from "@/api/user";
 
 export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        true: "danger",
-        false: "success"
+        0: "danger",
+        1: "success"
       };
       return statusMap[status];
     }
@@ -247,27 +246,48 @@ export default {
   data() {
     return {
       list: null,
-      selectList: null,
+      selectList: [
+        {
+          value: "选项1",
+          label: "黄金糕"
+        },
+        {
+          value: "选项2",
+          label: "双皮奶"
+        },
+        {
+          value: "选项3",
+          label: "蚵仔煎"
+        },
+        {
+          value: "选项4",
+          label: "龙须面"
+        },
+        {
+          value: "选项5",
+          label: "北京烤鸭"
+        }
+      ],
       listLoading: true,
       currentPage: 1,
       totalCount: 1,
       pageSize: 10,
       centerDialogVisible: false,
-      form: {
-        ParentId: "",
-        Name: "",
-        Path: "",
-        Icon: "",
-        Component: "",
-        Redirect: "",
-        Title: "",
-        OrderSort: 0,
-        Description: "",
-        Hidden: false,
-        IsDeleted: false
-      },
       menuName: "",
-      isAdd: false
+      isAdd: false,
+      imageUrl: "",
+      form: {
+        uID: "",
+        uLoginName: "",
+        uLoginPWD: "",
+        uRealName: "",
+        uStatus: 1,
+        uRemark: "",
+        uCreateTime: "",
+        uUpdateTime: "",
+        uLastErrTime: "",
+        uHeaderImgUrl: ""
+      }
     };
   },
   methods: {
@@ -283,10 +303,8 @@ export default {
       this.centerDialogVisible = true;
       //清空数据
       Object.keys(this.form).forEach(s => {
-        if (s == "Hidden" || s == "IsDeleted") {
-          return (this.form[s] = false);
-        } else if (s == "OrderSort") {
-          return 0;
+        if (s == "uStatus") {
+          return (this.form[s] = 1);
         } else {
           this.form[s] = "";
         }
@@ -295,7 +313,7 @@ export default {
     },
     handleEdit(rowindex, row) {
       this.centerDialogVisible = true;
-      getMenuByID(row.Id).then(r => {
+      getInfoByID(row.uID).then(r => {
         if (r.Success) {
           this.form = r.Data;
           this.isAdd = false;
@@ -303,8 +321,8 @@ export default {
       });
     },
     handleDelete(rowindex, row) {
-      deleteMenuData(row.Id).then(r => {
-        let msg = r.Success ? r.Msg : "菜单删除失败";
+      deleteInfoData(row.Id).then(r => {
+        let msg = r.Msg;
         let type = r.Success ? "success" : "error";
         this.$message({
           message: msg,
@@ -326,43 +344,40 @@ export default {
         }
       });
     },
-    savemenu() {
-      if (this.isAdd) {
-        addMenuData(this.form).then(r => {
-          let msg = r.Success ? r.Msg : "菜单添加失败";
-          let type = r.Success ? "success" : "error";
-          this.$message({
-            message: msg,
-            type: type
-          });
-          if (r.Success) {
-            this.centerDialogVisible = false;
-          }
-          this.loadTableData();
+    save() {
+      this.saveFunction().then(r => {
+        let msg = r.Msg;
+        let type = r.Success ? "success" : "error";
+        this.$message({
+          message: msg,
+          type: type
         });
-      } else {
-        saveMenuData(this.form).then(r => {
-          let msg = r.Success ? r.Msg : "菜单更新失败";
-          let type = r.Success ? "success" : "error";
-          this.$message({
-            message: msg,
-            type: type
-          });
-          if (r.Success) {
-            this.centerDialogVisible = false;
-          }
-          this.loadTableData();
-        });
-      }
+        if (r.Success) {
+          this.centerDialogVisible = false;
+        }
+        this.loadTableData();
+      });
+    },
+    saveFunction() {
+      return this.isAdd ? addInfoData(this.form) : saveInfoData(this.form);
     },
     onSubmit() {
       console.log("submit!");
     },
-    selectClick() {
-      this.selectList = this.list.map(n => {
-        return { Id: n.Id, Title: n.Title };
-      });
-      this.selectList.push({ Id: 0, Title: "顶级菜单" });
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
     }
   },
   mounted: function() {
@@ -396,6 +411,29 @@ export default {
 }
 .menu-width {
   width: 100%;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }
 </style>
 
