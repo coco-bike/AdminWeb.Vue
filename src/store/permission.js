@@ -52,7 +52,6 @@ const permission = {
               return false;
             });
             commit('SET_ROUTERS', accessedRouters);
-            console.log(accessedRouters);
             resolve();
         });
       });

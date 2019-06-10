@@ -72,8 +72,8 @@ export default {
       }
     };
     const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error("密码不能小于5位"));
+      if (value.length < 1) {
+        callback(new Error("密码不能小于1位"));
       } else {
         callback();
       }
@@ -120,8 +120,8 @@ export default {
               this.loading = false;
               this.$router.push({ path: this.redirect || "/" });
               this.$notify({
-                title: "成功",
-                message: "这是一条成功的提示消息",
+                title: "恭喜",
+                message: "登录成功",
                 type: "success"
               });
             })

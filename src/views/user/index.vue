@@ -190,11 +190,13 @@
             <el-form-item label="头像">
               <el-upload
                 class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                :action="upLoadUrl"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload"
-              >
+                :headers="myHeaders"
+                accept="image/jpeg,image/jpg,image/png">
+              
                 <img
                   v-if="imageUrl"
                   :src="imageUrl"
@@ -232,6 +234,8 @@ import {
   addInfoData,
   deleteInfoData
 } from "@/api/user";
+import { getToken } from "@/utils/auth";
+import { dateNowStr } from "@/utils/index";
 
 export default {
   filters: {
@@ -276,8 +280,10 @@ export default {
       menuName: "",
       isAdd: false,
       imageUrl: "",
+      upLoadUrl: process.env.BASE_API + "/sysUserInfo/UploadFiles",
+      myHeaders: { Authorization: getToken() },
       form: {
-        uID: "",
+        uID: 0,
         uLoginName: "",
         uLoginPWD: "",
         uRealName: "",
@@ -299,27 +305,37 @@ export default {
       this.currentPage = val;
       this.loadTableData();
     },
+    //添加用户
     handleAdd() {
       this.centerDialogVisible = true;
       //清空数据
       Object.keys(this.form).forEach(s => {
-        if (s == "uStatus") {
+        if (s == "uStatus" || s == "uID") {
           return (this.form[s] = 1);
         } else {
           this.form[s] = "";
         }
       });
       this.isAdd = true;
+      this.imageUrl = "";
+      this.form.uCreateTime = dateNowStr();
+      this.form.uUpdateTime = dateNowStr();
+      this.form.uLastErrTime = dateNowStr();
     },
+    //修改用户
     handleEdit(rowindex, row) {
       this.centerDialogVisible = true;
       getInfoByID(row.uID).then(r => {
         if (r.Success) {
           this.form = r.Data;
           this.isAdd = false;
+          this.imageUrl = "http://localhost:58427/"+this.form.uHeaderImgUrl;
+          this.form.uStatus = this.form.uStatus == 1 ? true : false;
         }
       });
+      this.form.uUpdateTime = dateNowStr();
     },
+    //删除用户
     handleDelete(rowindex, row) {
       deleteInfoData(row.Id).then(r => {
         let msg = r.Msg;
@@ -334,6 +350,7 @@ export default {
         this.loadTableData();
       });
     },
+    //加载列表
     loadTableData() {
       this.listLoading = true;
       getPageList(this.currentPage, this.pageSize).then(r => {
@@ -344,6 +361,7 @@ export default {
         }
       });
     },
+    //保存
     save() {
       this.saveFunction().then(r => {
         let msg = r.Msg;
@@ -359,25 +377,25 @@ export default {
       });
     },
     saveFunction() {
+      this.form.uStatus = this.form.uStatus ? 1 : 0;
       return this.isAdd ? addInfoData(this.form) : saveInfoData(this.form);
-    },
-    onSubmit() {
-      console.log("submit!");
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
+      this.form.uHeaderImgUrl = res.path;
+      console.log(res.path);
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
+      let testmsg=/^image\/(jpeg|png|jpg)$/.test(file.type)
       const isLt2M = file.size / 1024 / 1024 < 2;
 
-      if (!isJPG) {
+      if (!testmsg) {
         this.$message.error("上传头像图片只能是 JPG 格式!");
       }
       if (!isLt2M) {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
-      return isJPG && isLt2M;
+      return testmsg && isLt2M;
     }
   },
   mounted: function() {
